@@ -1,12 +1,17 @@
 import random
 
-def rabinMiller(n) -> int:
+def rabinMiller(n) -> bool:
     begin  = 2
     end = n - 2
-    
+    s = n - 1
+
     a = random.randInt(begin, end)
+    x = pow(a,s,n)
 
-
+    if x == 1 or x == n - 1:
+        return True 
+    
+    for j = 1 to r = 1
 
 
 def calculateD(p,q,e) -> int:

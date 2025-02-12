@@ -50,11 +50,15 @@ def calculateD(p,q,e) -> int:
     
     return val
 
-def inverseModM(m, a):
-    # find v such that d = gcd(a,m) = a x v mod m, if d = 1 then v is the
-    u1 = 1, u2 = 0
-    v1 = 0, v2 = 1
+def extendedGCD(a, b):
+    if b == 0:
+        return a, 1, 0  # Base case: gcd(a, 0) = a, coefficients (1, 0)
+    
+    gcd, x1, y1 = extendedGCD(b, a % b)  # Recursive call
+    x = y1
+    y = x1 - (a // b) * y1
 
+    return gcd, x, y
 
 def main():
     p = 7
@@ -68,4 +72,32 @@ def main():
     res2 = rabinMiller(val, 20)
     print(res2)
 
+    # res3 = inverseModM(1,4)
+    # print(res3)
+
+    # gcd, x, y = extendedGCD(27,46)
+    # print(f"{gcd} + {x} + {y}")
+
 main()
+
+# def inverseModM(m, a):
+#     # find v such that d = gcd(a,m) = a x v mod m, if d = 1 then v is the inverse of modulo m
+#     v1 = 0
+#     v2 = 1
+#     d1 = m
+#     d2 = a
+
+#     while d2 != 0:
+#         q = d1 / d2
+#         t2 = v1 - q * v2
+#         t3 = d1 - q * d2
+#         v1 = v2
+#         d1 = d2
+#         v2 = t2
+#         d2 = t3
+    
+#     v = v1
+#     d = d1
+#     if v < 0: v += m
+#     # 0 < v < m
+#     return v

@@ -50,6 +50,12 @@ def calculateD(p,q,e) -> int:
     
     return val
 
+def inverseModM(m, a):
+    # find v such that d = gcd(a,m) = a x v mod m, if d = 1 then v is the
+    u1 = 1, u2 = 0
+    v1 = 0, v2 = 1
+
+
 def main():
     p = 7
     q = 11

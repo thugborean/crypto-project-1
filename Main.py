@@ -1,6 +1,19 @@
 import random
 import time
 
+def generatePrimes(numbersToGenerate, sizeOfNumbersInBits, iterations):
+    startTime = time.time()
+
+    listOfPrimes = set()
+    while len(listOfPrimes) < numbersToGenerate:
+        number = random.getrandbits(sizeOfNumbersInBits)
+        # check it the random number is a prime
+        isPrime = rabinMiller(number, iterations)
+        if isPrime: listOfPrimes.add(number)
+    
+    endTime = time.time()
+    print(f"Time elapsed: {endTime - startTime} seconds, to generate {numbersToGenerate} primes of size {sizeOfNumbersInBits}")
+
 def rabinMiller(n, iterations) -> bool:
     # step 0, quick check
     if n == 2 or n == 3: return True
@@ -38,7 +51,6 @@ def rabinMiller(n, iterations) -> bool:
 
     return True
 
-
 def calculateD(p,q,e) -> int:
     # d = e^-1 * (mod (p − 1)(q − 1))
     phi = ((p-1) * (q-1))
@@ -57,15 +69,22 @@ def extendedGCD(a, b) -> int:
     return gcd, x, y
 
 def main():
-    p = 0
-    q = 0
-    e = 13
-    num = 0
+    # p
+    a = 5411871029092462825516185209329155738882437723668937447678705813383753989896625756765214367131469274835377472645480091140402399461250152678125693930035771
+    # q
+    m = 9714555070505236732818155692536136618594137166972361243648893311925812214088974952419769198868507372533717366520228097147768109020620023156613694426379779
+    e = 2**16 + 1
+    # e * d / (mod (a - 1)(m - 1)) = 1
+    gcd, x, y = extendedGCD(a,m)
+    print(f"{gcd} + {x} + {y}")
 
-    res = calculateD(9714555070505236732818155692536136618594137166972361243648893311925812214088974952419769198868507372533717366520228097147768109020620023156613694426379779,
-    5411871029092462825516185209329155738882437723668937447678705813383753989896625756765214367131469274835377472645480091140402399461250152678125693930035771,e)
-    print(res)
-    startTime = time.time()
+
+    inverse = True
+    if (gcd != 1): inverse = False
+    print(inverse)
+
+    # res = calculateD(p,q,e)
+    # print(res1)
 
     # listOfPrimes = set()
     # while len(listOfPrimes) < 100:
@@ -75,32 +94,4 @@ def main():
         
     # res3 = inverseModM(1,4)
     # print(res3)
-
-    # gcd, x, y = extendedGCD(27,46)
-    # print(f"{gcd} + {x} + {y}")
-    endTime = time.time()
-    print(f"Time elapsed: {endTime - startTime} seconds")
-
 main()
-
-# def inverseModM(m, a):
-#     # find v such that d = gcd(a,m) = a x v mod m, if d = 1 then v is the inverse of modulo m
-#     v1 = 0
-#     v2 = 1
-#     d1 = m
-#     d2 = a
-
-#     while d2 != 0:
-#         q = d1 / d2
-#         t2 = v1 - q * v2
-#         t3 = d1 - q * d2
-#         v1 = v2
-#         d1 = d2
-#         v2 = t2
-#         d2 = t3
-    
-#     v = v1
-#     d = d1
-#     if v < 0: v += m
-#     # 0 < v < m
-#     return v

@@ -1,43 +1,39 @@
 import random
+import time
 
 def rabinMiller(n, iterations) -> bool:
     # step 0, quick check
-    if n == 1 or n == 2 or n == 3: return True
-    elif n % 2 == 0 or n % 3 == 0 or n % 5 == 0: return False
+    if n == 2 or n == 3: return True
+    if n < 2 or n % 2 == 0: return False
+
 
     # step 1, stop when m is not a whole number
     newN = n - 1
     k = 1    #r
     m = newN #s
 
-    res = 0
-    while True:
-        res = newN / (2**k)
-
-        # check for decimal
-        if res % 1 != 0:  
-            break
-        
+    # Factor n-1 as (2^k)*m
+    m = n - 1
+    k = 0
+    while m % 2 == 0:
+        m //= 2
         k += 1
-        m = res
 
-    # step 2, 1 < a < n -1, we need a and m
-    a = random.randint(2, n - 2)
-
-    # step 3, x = a^m mod n
+    # step 2, x = a^m mod n
     for i in range(iterations):
+        a = random.randint(2, n - 2)
         x = pow(a, int(m), int(n))
         if x == 1 or x == n - 1:
             continue
 
-        is_composite = True
+        isComposite = True
         for j in range(k - 1):
             x = pow(x, 2, n)  # x = x^2 % n, dubblar exponenten varje gång vi testar
             if x == n - 1:
-                is_composite = False
+                isComposite = False
                 break
 
-        if is_composite:
+        if isComposite:
             return False  # Hittade en witness
 
     return True
@@ -50,7 +46,7 @@ def calculateD(p,q,e) -> int:
     
     return val
 
-def extendedGCD(a, b):
+def extendedGCD(a, b) -> int:
     if b == 0:
         return a, 1, 0  # Base case: gcd(a, 0) = a, coefficients (1, 0)
     
@@ -61,22 +57,29 @@ def extendedGCD(a, b):
     return gcd, x, y
 
 def main():
-    p = 7
-    q = 11
+    p = 0
+    q = 0
     e = 13
+    num = 0
 
-    # res1 = calculateD(p,q,e)
-    # print(res1)
+    res = calculateD(9714555070505236732818155692536136618594137166972361243648893311925812214088974952419769198868507372533717366520228097147768109020620023156613694426379779,
+    5411871029092462825516185209329155738882437723668937447678705813383753989896625756765214367131469274835377472645480091140402399461250152678125693930035771,e)
+    print(res)
+    startTime = time.time()
 
-    val = int(input("Input number to check if it's prime: "))
-    res2 = rabinMiller(val, 20)
-    print(res2)
-
+    # listOfPrimes = set()
+    # while len(listOfPrimes) < 100:
+    #     number = random.getrandbits(4096)
+    #     isPrime = rabinMiller(number, 20)
+    #     if isPrime: listOfPrimes.add(number)
+        
     # res3 = inverseModM(1,4)
     # print(res3)
 
     # gcd, x, y = extendedGCD(27,46)
     # print(f"{gcd} + {x} + {y}")
+    endTime = time.time()
+    print(f"Time elapsed: {endTime - startTime} seconds")
 
 main()
 

@@ -57,11 +57,11 @@ def calculateD(p,q,e) -> int:
     
     return val
 
-def extendedGCD(a, b) -> int:
+def extendedGCD(a, b):
     if b == 0:
-        return a, 1, 0  # Base case: gcd(a, 0) = a, coefficients (1, 0)
+        return a, 1, 0  # gcd(a, 0) = a, and x = 1, y = 0
     
-    gcd, x1, y1 = extendedGCD(b, a % b)  # Recursive call
+    gcd, x1, y1 = extendedGCD(b, a % b)
     x = y1
     y = x1 - (a // b) * y1
 
@@ -69,13 +69,21 @@ def extendedGCD(a, b) -> int:
 
 def main():
     # # p
-    # a = 5411871029092462825516185209329155738882437723668937447678705813383753989896625756765214367131469274835377472645480091140402399461250152678125693930035771
+    p = 23842883
     # # q
-    # m = 9714555070505236732818155692536136618594137166972361243648893311925812214088974952419769198868507372533717366520228097147768109020620023156613694426379779
-    # e = 2**16 + 1
+    q = 9986831
+    e = 2**16 + 1
+    m = (p-1) * (q-1)
     # # e * d / (mod (a - 1)(m - 1)) = 1
-    # gcd, x, y = extendedGCD(a,m)
+    gcd, x, y = extendedGCD(e,m)
+
+    d = calculateD(p, q, e)
+
+    if (e * d % m == 1):
+        print("works")
     # print(f"{gcd} + {x} + {y}")
+
+    print(d)
 
     # inverse = True
     # if (gcd != 1): inverse = False
@@ -86,5 +94,5 @@ def main():
 
     # res3 = inverseModM(1,4)
     # print(res3)
-    generatePrimes(100, 4096, 20)
+
 main()

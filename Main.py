@@ -1,18 +1,22 @@
 import random
 import time
 
-def generatePrimes(numbersToGenerate, sizeOfNumbersInBits, iterations):
+def generatePrimes(numbersToGenerate, sizeOfNumbersInBits, iterations) -> set[int]:
+    # start the clock
     startTime = time.time()
 
     listOfPrimes = set()
     while len(listOfPrimes) < numbersToGenerate:
         number = random.getrandbits(sizeOfNumbersInBits)
-        # check it the random number is a prime
+        # check if the random number is a prime
         isPrime = rabinMiller(number, iterations)
         if isPrime: listOfPrimes.add(number)
     
+    # end the clock
     endTime = time.time()
     print(f"Time elapsed: {endTime - startTime} seconds, to generate {numbersToGenerate} primes of size {sizeOfNumbersInBits} bits")
+
+    return listOfPrimes
 
 def rabinMiller(n, iterations) -> bool:
     # step 0, quick check
@@ -34,19 +38,19 @@ def rabinMiller(n, iterations) -> bool:
     # step 2, x = a^m mod n
     for i in range(iterations):
         a = random.randint(2, n - 2)
-        x = pow(a, int(m), int(n))
+        x = pow(a, m, n)
         if x == 1 or x == n - 1:
             continue
 
         isComposite = True
         for j in range(k - 1):
-            x = pow(x, 2, n)  # x = x^2 % n, dubblar exponenten varje gång vi testar
+            x = pow(x, 2, n)  # x = x^2 % n
             if x == n - 1:
                 isComposite = False
                 break
 
         if isComposite:
-            return False  # Hittade en witness
+            return False
 
     return True
 
@@ -57,7 +61,7 @@ def calculateD(p,q,e) -> int:
     
     return val
 
-def extendedGCD(a, b):
+def extendedGCD(a, b) -> tuple [int, int, int]:
     if b == 0:
         return a, 1, 0  # gcd(a, 0) = a, and x = 1, y = 0
     
@@ -68,35 +72,60 @@ def extendedGCD(a, b):
     return gcd, x, y
 
 def main():
-    # # p
-    p = 5411871029092462825516185209329155738882437723668937447678705813383753989896625756765214367131469274835377472645480091140402399461250152678125693930035771
-    # # q
-    q = 9714555070505236732818155692536136618594137166972361243648893311925812214088974952419769198868507372533717366520228097147768109020620023156613694426379779
-    e = 2**16 + 1
-    m = (p-1) * (q-1)
-    N = p * q
-    s = 0
-    c = pow(s,e,N)
-    # # e * d / (mod (a - 1)(m - 1)) = 1
-    gcd, x, y = extendedGCD(p,q)
 
-    d = calculateD(p, q, e)
+    while True:
+        # generate primes
+        gen = generatePrimes(3, 512, 20);
+        listOfPrimes = list(gen)
+        # p
+        p = listOfPrimes[0]
+        # q
+        q = listOfPrimes[1]
+        # e
+        e = 2**16 + 1
+        # m
+        m = (p-1) * (q-1)
+        # N
+        N = p * q
+        s = listOfPrimes[2]
+        c = pow(s,e,N)
 
-    # if (e * d % m == 1):
-    #     print("works")
-    print(f"{gcd} + {x} + {y}")
-    # z = pow(c, d, N)
-    # print(z)
-    # print(d)
+        choice = input("Choose option: \n(1) Generate Primes\n(2) Perform extended GCD\n(3) Calculate D\n(4) Exit \n")
+        try:
+            choice = int(choice)
+            if (choice < 1 and choice > 5):
+                print("Invalid choice!")
+                continue
+        except:
+            print("Invalid choice!")
+            continue
 
-    # inverse = True
-    # if (gcd != 1): inverse = False
-    # print(inverse)
+        if choice == 1:
+            numberOfPrimes = input("Enter number of primes to generate: ")
+            sizeOfNumbersInBits = input("Enter size of primes in bits: ")
+            try:
+                numberOfPrimes = int(numberOfPrimes)
+                sizeOfNumbersInBits = int(sizeOfNumbersInBits)
+            except:
+                print("Invalid Input/s!")
+                continue
+            listOfPrimes = generatePrimes(numberOfPrimes, sizeOfNumbersInBits, 20)
+            for prime in listOfPrimes:
+                print(prime)
+        elif choice == 2:
+            gcd, x, y = extendedGCD(p,q)
+            print(f"{gcd} + {x} + {y}")
+        elif choice == 3:
+            d = calculateD(p, q, e)
+            if (e * d % m == 1):
+                print(f"D is: {d}")
+                print("The algorithm works!")
 
-    # res = calculateD(p,q,e)
-    # print(res1)
+            z = pow(c, d, N)
+            print(f"Z is: {z}!")
+        elif choice == 4: break
+    
+    print("Program exiting!")
 
-    # res3 = inverseModM(1,4)
-    # print(res3)
-
-main()
+if __name__ == "__main__":
+    main()

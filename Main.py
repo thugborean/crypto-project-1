@@ -71,6 +71,7 @@ def extendedGCD(a, b) -> tuple [int, int, int]:
 
     return gcd, x, y
 
+# This program was made by Alexander Grehnik Mårtensson & Daniel Isaksson
 def main():
 
     while True:
